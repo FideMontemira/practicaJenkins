@@ -1,0 +1,70 @@
+pipeline {
+
+    agent any
+
+  
+    stages {
+        
+       
+        stage('Checkout') {
+            steps {
+                
+                git 'https://github.com/FideMontemira/practicaJenkins.git'
+            }
+        }
+
+       
+        stage('Build') {
+            steps {
+                
+                echo "Construyendo la imagen Docker..."
+                sh 'docker build -t pokemon-api:latest .'
+            }
+        }
+
+      +
+        stage('Test') {
+            steps {
+               
+                echo "Etapa de Pruebas Omitida (Opcional)"
+            }
+        }
+
+        stage('Push') {
+            steps {
+              
+                echo "Etapa de Push Omitida (Opcional)"
+            }
+        }
+
+       
+        stage('Deploy') {
+            steps {
+                echo "Desplegando la aplicación..."
+                sh '''
+                    # 1. Detiene el contenedor si ya existe (para evitar conflictos)
+                    docker stop pokemon-app-container || true
+                    
+                    # 2. Elimina el contenedor si ya existe (para limpieza)
+                    docker rm pokemon-app-container || true
+                    
+                    # 3. Ejecuta el nuevo contenedor con la imagen que construimos
+                    # -d = modo "detached" (en segundo plano)
+                    # --name = nombre fácil de recordar
+                    # -p 8080:3000 = Mapea el puerto 8080 de la MÁQUINA al 3000 del CONTENEDOR
+                    # pokemon-api:latest = la imagen que usamos
+                    docker run -d --name pokemon-app-container -p 8080:3000 pokemon-api:latest
+                '''
+            }
+        }
+    }
+    
+  
+    post {
+       
+        always {
+            echo "Pipeline terminado."
+         
+        }
+    }
+}
