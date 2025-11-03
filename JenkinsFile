@@ -53,7 +53,7 @@ pipeline {
                     # --name = nombre fácil de recordar
                     # -p 8080:3000 = Mapea el puerto 8080 de la MÁQUINA al 3000 del CONTENEDOR
                     # pokemon-api:latest = la imagen que usamos
-                    docker run -d --name pokemon-app-container -p 8080:3000 pokemon-api:latest
+                    docker run -d --name pokemon-app-container -p 8081:8081 pokemon-api:latest
                 '''
             }
         }
